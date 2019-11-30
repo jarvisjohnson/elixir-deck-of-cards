@@ -17,7 +17,7 @@ defmodule Cards do
   end
 
   def create_deck do
-    values = ["Ace", "Two", "Three", "Four"]
+    values = ["Ace", "Two", "Three", "Four", "Five"]
     suits = ["Spades", "Clubs", "Hearts", "Diamonds"]
 
     for suit <- suits, value <- values do
@@ -37,7 +37,7 @@ defmodule Cards do
   ## Examples
 
       iex> deck = Cards.create_deck
-      iex> {hand, deck} = Cards.deal(deck, 1)
+      iex> {hand, _deck} = Cards.deal(deck, 1)
       iex> hand
       ["Ace of Spades"]
 
@@ -46,7 +46,17 @@ defmodule Cards do
     Enum.split(deck, hand_size)
   end
 
-  def contains(deck, card) do
+  @doc """
+    Determines whether a card is within the deck
+
+    ## Examples
+
+        iex> deck = Cards.create_deck
+        iex> Cards.contains?(deck, "Ace of Spades")
+        true
+
+  """
+  def contains?(deck, card) do
     Enum.member?(deck, card)
   end
 
@@ -57,14 +67,14 @@ defmodule Cards do
 
   def load(filename) do
     case File.read(filename) do
-      {:ok, binary} -> :erlang.binary_to_term binary
+      {:ok, binary} -> :erlang.binary_to_term(binary)
       {:error, _reason} -> "Could not find the file"
     end
   end
 
   def create_hand(hand_size) do
-    Cards.create_deck
-    |> Cards.shuffle
+    Cards.create_deck()
+    |> Cards.shuffle()
     |> Cards.deal(hand_size)
   end
 end
